@@ -10,16 +10,11 @@ export const profiles: { label: string; href: string; icon: "orcid" | "github" |
   { label: "LinkedIn", href: "https://www.linkedin.com/", icon: "linkedin" },
 ];
 
-export interface Part {
-  id: string;
-  label: string;
-}
 
 export interface Section {
   href: string;
   label: string;
   summary: string;
-  parts: Part[];
 }
 
 export const sections: Section[] = [
@@ -27,31 +22,26 @@ export const sections: Section[] = [
     href: "/about",
     label: "About",
     summary: "Who I am, what I work on, and how to get in touch.",
-    parts: [],
   },
   {
     href: "/research",
     label: "Research",
     summary: "My publications, each with its abstract, a link to its record and a BibTeX citation to copy.",
-    parts: [],
   },
   {
     href: "/posts",
     label: "Posts",
     summary: "Longer writing: notes on papers, talks, methods and whatever else seemed worth writing down.",
-    parts: [],
   },
   {
     href: "/links",
     label: "Links",
     summary: "Talks, code, data and other places my work lives off this site.",
-    parts: [],
   },
   {
     href: "/cv",
     label: "CV",
     summary: "My curriculum vitae.",
-    parts: [],
   },
 ];
 

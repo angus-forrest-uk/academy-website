@@ -1,8 +1,8 @@
-
 ---
 import "katex/dist/katex.min.css";
 import { render } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import Prose from "@/components/Prose.astro";
 import { isHidden, isoDate, longDate, type Post } from "@/lib/posts";
 import { siteName } from "@/lib/site";
 
@@ -18,8 +18,8 @@ const updated = recentDate && isoDate(recentDate) !== isoDate(pubDate) ? recentD
 ---
 
 <BaseLayout title={`${title} | ${siteName}`} description={description} published={pubDate} noindex={hidden}>
-  <article class="page post">
-    <p class="post-meta">
+  <article>
+    <p class="meta label">
       <a href="/posts">Posts</a>
       <span aria-hidden="true">/</span>
       <time datetime={isoDate(pubDate)}>{longDate(pubDate)}</time>
@@ -30,12 +30,45 @@ const updated = recentDate && isoDate(recentDate) !== isoDate(pubDate) ? recentD
           </span>
         ) : null
       }
-      {hidden ? <span class="post-flag">Draft: not on the built site</span> : null}
+      {hidden ? <span class="draft">Draft: not on the built site</span> : null}
     </p>
-    <h1 class="page-title">{title}</h1>
-    <p class="post-byline">{author}</p>
-    <div class="page-body prose">
+    <h1>{title}</h1>
+    <p class="byline">{author}</p>
+    <Prose>
       <Content />
-    </div>
+    </Prose>
   </article>
 </BaseLayout>
+
+<style>
+  article {
+    padding: 3rem var(--gap);
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.5rem;
+    margin: 0 0 1.5rem;
+  }
+
+  .draft {
+    padding: 0 0.5rem;
+    color: var(--paper);
+    background: var(--ink);
+  }
+
+  h1 {
+    margin: 0;
+    font-size: var(--text-h1);
+    font-weight: var(--weight-heading);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+
+  .byline {
+    margin: 1rem 0 2rem;
+    color: var(--muted);
+  }
+</style>

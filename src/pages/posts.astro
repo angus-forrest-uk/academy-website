@@ -1,36 +1,31 @@
-
 ---
 import SectionLayout from "@/layouts/SectionLayout.astro";
-import { isHidden, isoDate, longDate, publishedPosts } from "@/lib/posts";
+import Card from "@/components/Card.astro";
+import Cards from "@/components/Cards.astro";
+import Group from "@/components/Group.astro";
+import { isHidden, longDate, publishedPosts } from "@/lib/posts";
 
 const posts = await publishedPosts();
 ---
 
 <SectionLayout title="Posts" description="Writing: notes on papers, talks and methods.">
   <p>Longer writing, newest first. Also available as an <a href="/feed.xml">RSS feed</a>.</p>
-  <section class="group" id="all-posts" slot="after">
-    <h2 class="group-label">All posts</h2>
+  <Group label="All posts" id="all-posts" slot="after">
     {
       posts.length === 0 ? (
-        <div class="page-body">
-          <p>Nothing published yet.</p>
-        </div>
+        <p>Nothing published yet.</p>
       ) : (
-        <ul class="papers">
+        <Cards>
           {posts.map((post) => (
-            <li class="chip paper post-chip">
-              <a class="paper-text" href={`/posts/${post.id}`}>
-                <p class="paper-reference">
-                  <time datetime={isoDate(post.data.pubDate)}>{longDate(post.data.pubDate)}</time>
-                  {isHidden(post) ? " · Draft" : null}
-                </p>
-                <h3 class="paper-title">{post.data.title}</h3>
-                <p class="post-description">{post.data.description}</p>
-              </a>
-            </li>
+            <Card
+              kind={`${longDate(post.data.pubDate)}${isHidden(post) ? " · Draft" : ""}`}
+              title={post.data.title}
+              text={post.data.description}
+              href={`/posts/${post.id}`}
+            />
           ))}
-        </ul>
+        </Cards>
       )
     }
-  </section>
+  </Group>
 </SectionLayout>

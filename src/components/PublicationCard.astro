@@ -1,0 +1,178 @@
+---
+import Card from "@/components/Card.astro";
+import Icon from "@/components/Icon.astro";
+import NoisePortrait from "@/components/NoisePortrait.astro";
+import { bibtex } from "@/lib/bibtex";
+import { doiUrl, reference, scixUrl, type Publication } from "@/lib/publications";
+
+interface Props {
+  publication: Publication;
+  /** Seeds the stand-in picture, so each paper gets different colours. */
+  index: number;
+}
+
+const { publication, index } = Astro.props;
+const { bibcode, title, authors, abstract } = publication;
+---
+
+<Card id={bibcode} kind={reference(publication)} title={title}>
+  <ul class="authors">
+    {
+      authors.map(({ given, family, orcid }) => (
+        <li>
+          {given} {family}
+          {orcid ? (
+            <a href={orcid} rel="noopener">
+              <Icon name="orcid" title={`${given} ${family} on ORCID`} />
+            </a>
+          ) : null}
+        </li>
+      ))
+    }
+  </ul>
+  <div class="abstract">
+    <p id={`abstract-${bibcode}`} set:html={abstract} />
+    <button class="toggle label" type="button" aria-expanded="false" aria-controls={`abstract-${bibcode}`}>More</button>
+  </div>
+  <p class="links">
+    <a href={scixUrl(publication)} rel="noopener">
+      <Icon name="scix" title={`${title} on SciX`} />
+    </a>
+    <a href={doiUrl(publication)} rel="noopener">
+      <Icon name="link" title={`${title} at its publisher`} />
+    </a>
+    <a class="export" href={`/publications/${bibcode}.bib`} download data-bibtex={bibtex(publication)}>
+      <Icon name="share" title={`Copy BibTeX citation for ${title}`} />
+    </a>
+    <span class="status label" role="status"></span>
+  </p>
+  <NoisePortrait slot="image" index={index + 20} />
+</Card>
+
+<script>
+  // Bound once on the document, so it keeps working after page transitions.
+  document.addEventListener("click", (event) => {
+    if (!(event.target instanceof Element)) return;
+
+    const toggle = event.target.closest(".toggle");
+    if (toggle) {
+      const open = toggle.getAttribute("aria-expanded") !== "true";
+      toggle.setAttribute("aria-expanded", String(open));
+      toggle.textContent = open ? "Less" : "More";
+      return;
+    }
+
+    const link = event.target.closest<HTMLAnchorElement>(".export");
+    const citation = link?.dataset.bibtex;
+    if (!link || !citation) return;
+
+    event.preventDefault();
+    const status = link.parentElement?.querySelector(".status");
+    copy(citation).then((copied) => {
+      if (!status) return;
+      status.textContent = copied ? "BibTeX copied to clipboard" : "Could not copy";
+      setTimeout(() => (status.textContent = ""), 2500);
+    });
+  });
+
+  // The clipboard API only exists on https and localhost.
+  function copyFromTextBox(text: string): boolean {
+    const box = document.createElement("textarea");
+    box.value = text;
+    box.style.position = "fixed";
+    box.style.opacity = "0";
+    document.body.append(box);
+    box.select();
+    let copied = false;
+    try {
+      copied = document.execCommand("copy");
+    } catch {
+      copied = false;
+    }
+    box.remove();
+    return copied;
+  }
+
+  function copy(text: string): Promise<boolean> {
+    if (!navigator.clipboard) return Promise.resolve(copyFromTextBox(text));
+    return navigator.clipboard.writeText(text).then(
+      () => true,
+      () => copyFromTextBox(text),
+    );
+  }
+</script>
+
+<style>
+  .authors {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.75rem;
+    padding: 0;
+    font-size: var(--text-sm);
+    list-style: none;
+    --icon-size: 0.875rem;
+  }
+
+  .authors li {
+    display: flex;
+    align-items: center;
+    gap: 0.3em;
+    white-space: nowrap;
+  }
+
+  .authors a,
+  .links a {
+    display: flex;
+  }
+
+  .authors a:hover,
+  .links a:hover {
+    opacity: 0.6;
+  }
+
+  .abstract {
+    font-size: var(--text-sm);
+  }
+
+  .abstract p {
+    margin: 0;
+  }
+
+  .abstract :global(:is(sub, sup)) {
+    line-height: 0;
+  }
+
+  .toggle {
+    margin-top: 0.5rem;
+    padding: 0;
+    border: 0;
+    color: inherit;
+    background: none;
+    text-decoration: underline;
+    text-underline-offset: 0.18rem;
+    cursor: pointer;
+  }
+
+  /* The abstract opens from three lines, but only where the script can open it. */
+  @media (scripting: enabled) {
+    .abstract p:has(+ [aria-expanded="false"]) {
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
+    }
+  }
+
+  @media (scripting: none) {
+    .toggle {
+      display: none;
+    }
+  }
+
+  .links {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+</style>

@@ -1,0 +1,22 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+type Props = HTMLAttributes<"a">;
+---
+
+<a class="label" {...Astro.props}><slot /></a>
+
+<style>
+  a {
+    display: inline-block;
+    margin-top: 1.5rem;
+    padding: 0.75rem var(--gap);
+    border: var(--rule);
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: var(--paper);
+    background: var(--ink);
+  }
+</style>

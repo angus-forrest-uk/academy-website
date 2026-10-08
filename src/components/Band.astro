@@ -1,0 +1,84 @@
+---
+interface Props {
+  href: string;
+  label: string;
+  summary: string;
+  /** Puts the aside on the left instead of the right. */
+  flipped?: boolean;
+  /** Draws a ruled box around the aside, as for a picture. */
+  framed?: boolean;
+}
+
+const { href, label, summary, flipped = false, framed = true } = Astro.props;
+---
+
+<section class:list={{ flipped }}>
+  <div class="text">
+    <h2><a href={href}>{label}</a></h2>
+    <p>{summary}</p>
+    <slot name="button" />
+  </div>
+  <div class:list={["aside", { framed }]}>
+    <slot />
+  </div>
+</section>
+
+<style>
+  section {
+    display: flex;
+    border-top: var(--rule);
+  }
+
+  .flipped {
+    flex-direction: row-reverse;
+  }
+
+  .text {
+    flex: 0 1 calc(var(--measure) + 2 * var(--gap));
+    align-self: center;
+    min-width: 0;
+    padding: 3rem var(--gap);
+  }
+
+  h2 {
+    margin: 0 0 1rem;
+    font-size: var(--text-md);
+    font-weight: var(--weight-heading);
+  }
+
+  p {
+    margin: 0;
+  }
+
+  .aside {
+    position: relative;
+    flex: 1;
+    min-height: 24rem;
+    margin: var(--gap) var(--gap) var(--gap) 0;
+  }
+
+  .flipped .aside {
+    margin: var(--gap) 0 var(--gap) var(--gap);
+  }
+
+  .framed {
+    border: var(--rule);
+  }
+
+  @media (max-width: 44rem) {
+    section,
+    .flipped {
+      display: block;
+    }
+
+    .aside,
+    .flipped .aside {
+      min-height: 0;
+      margin: 0 var(--gap) var(--gap);
+    }
+
+    .framed {
+      aspect-ratio: 3 / 2;
+    }
+  }
+</style>

@@ -1,0 +1,31 @@
+---
+interface Props {
+  /** "rows": one card to a row. "grid": small cards side by side. */
+  layout?: "rows" | "grid";
+  /** Stretches the cards to share the height of the box they are in. */
+  fill?: boolean;
+}
+
+const { layout = "rows", fill = false } = Astro.props;
+---
+
+<ul class:list={[layout, { fill }]}><slot /></ul>
+
+<style>
+  ul {
+    display: grid;
+    gap: var(--gap);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .fill {
+    height: 100%;
+    grid-auto-rows: 1fr;
+  }
+
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(min(var(--width-card), 100%), var(--width-card)));
+  }
+</style>

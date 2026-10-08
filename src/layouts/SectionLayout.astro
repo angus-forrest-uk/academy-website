@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import Prose from "@/components/Prose.astro";
 import { siteName } from "@/lib/site";
 
 interface Props {
@@ -8,30 +9,78 @@ interface Props {
 }
 
 const { title, description } = Astro.props;
+const hasAside = Astro.slots.has("aside");
 ---
 
 <BaseLayout title={`${title} | ${siteName}`} description={description}>
-  {/* With an aside the page splits in two: the text on the left, and on the
-      right a box of its own that runs the height of the page. */}
-  <div class:list={{ "page-split": Astro.slots.has("aside") }}>
+  <div class:list={{ split: hasAside }}>
     <section class="page">
-      <h1 class="page-title">{title}</h1>
+      <h1>{title}</h1>
       {
         Astro.slots.has("default") ? (
-          <div class="page-body">
-            <slot />
+          <div class="body">
+            <Prose>
+              <slot />
+            </Prose>
           </div>
         ) : null
       }
     </section>
     {
-      Astro.slots.has("aside") ? (
-        <div class="page-aside">
+      hasAside ? (
+        <div class="aside">
           <slot name="aside" />
         </div>
       ) : null
     }
   </div>
-  {/* Full-width material that runs to the edges of the frame, under the title. */}
   <slot name="after" />
 </BaseLayout>
+
+<style>
+  .page {
+    padding: 3rem var(--gap);
+  }
+
+  h1 {
+    margin: 0;
+    font-size: var(--text-h1);
+    font-weight: var(--weight-heading);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+
+  .body {
+    margin-top: 2rem;
+  }
+
+  /* With an aside: the text keeps its measure on the left, the aside takes the rest. */
+  .split {
+    display: flex;
+    flex: 1;
+  }
+
+  .split .page {
+    flex: 0 1 calc(var(--measure) + 2 * var(--gap));
+    min-width: 0;
+  }
+
+  .aside {
+    position: relative;
+    flex: 1;
+    margin: var(--gap) var(--gap) var(--gap) 0;
+    border: var(--rule);
+  }
+
+  @media (max-width: 44rem) {
+    .split {
+      display: block;
+    }
+
+    .aside {
+      aspect-ratio: 2;
+      margin: 0 var(--gap) var(--gap);
+    }
+  }
+</style>

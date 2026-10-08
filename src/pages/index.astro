@@ -1,34 +1,33 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import Band from "@/components/Band.astro";
+import Button from "@/components/Button.astro";
+import Card from "@/components/Card.astro";
+import Cards from "@/components/Cards.astro";
 import NoisePortrait from "@/components/NoisePortrait.astro";
 import { sections, siteName } from "@/lib/site";
-import { isoDate, longDate, publishedPosts } from "@/lib/posts";
+import { longDate, publishedPosts } from "@/lib/posts";
 import { dayMonthAndYear } from "@/lib/dates";
 import { publications } from "@/lib/publications";
 
 interface Preview {
   kind: string;
-  when: string;
-  datetime: string;
   title: string;
-  source?: string;
+  text?: string;
   href: string;
 }
 
+// In place of a picture, a section can show what is newest on its page.
 const previews: Record<string, Preview[]> = {
   "/posts": (await publishedPosts()).slice(0, 3).map((post) => ({
-    kind: "Post",
-    when: longDate(post.data.pubDate),
-    datetime: isoDate(post.data.pubDate),
+    kind: `Post · ${longDate(post.data.pubDate)}`,
     title: post.data.title,
     href: `/posts/${post.id}`,
   })),
   "/research": publications.slice(0, 3).map((publication) => ({
-    kind: "Publication",
-    when: dayMonthAndYear(publication.date),
-    datetime: publication.date,
+    kind: `Publication · ${dayMonthAndYear(publication.date)}`,
     title: publication.title,
-    source: publication.venue,
+    text: publication.venue,
     href: `/research#${publication.bibcode}`,
   })),
 };
@@ -37,42 +36,47 @@ const previews: Record<string, Preview[]> = {
 <BaseLayout title={siteName}>
   <section class="banner">
     <NoisePortrait index={40} hues={[225, 355]} frequency={0.003} />
-    <h1 class="banner-title">{siteName}</h1>
+    <h1>{siteName}</h1>
   </section>
   {
-    sections.map(({ href, label, summary }, index) => (
-      <section class:list={["page-split", "page-band", { "page-split-flipped": index % 2 === 1 }]}>
-        <div class="page">
-          <div class="page-body">
-            <h2>
-              <a href={href}>{label}</a>
-            </h2>
-            <p>{summary}</p>
-            <a class="button" href={href} aria-label={`Go to ${label}`}>
-              Learn more
-            </a>
-          </div>
-        </div>
-        {previews[href]?.length ? (
-          <ul class="page-aside updates">
-            {previews[href].map(({ kind, when, datetime, title, source, href: where }) => (
-              <li>
-                <a class="chip update" href={where}>
-                  <span class="paper-reference">
-                    {kind} · <time datetime={datetime}>{when}</time>
-                  </span>
-                  <span class="paper-title">{title}</span>
-                  {source ? <span class="update-source">{source}</span> : null}
-                </a>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <a class="page-aside" href={href} aria-label={label} tabindex="-1">
+    sections.map(({ href, label, summary }, index) => {
+      const items = previews[href] ?? [];
+      return (
+        <Band href={href} label={label} summary={summary} flipped={index % 2 === 1} framed={items.length === 0}>
+          <Button slot="button" href={href} aria-label={`Go to ${label}`}>
+            Learn more
+          </Button>
+          {items.length > 0 ? (
+            <Cards fill>
+              {items.map((item) => (
+                <Card {...item} />
+              ))}
+            </Cards>
+          ) : (
             <NoisePortrait index={120 + index} frequency={0.003} />
-          </a>
-        )}
-      </section>
-    ))
+          )}
+        </Band>
+      );
+    })
   }
 </BaseLayout>
+
+<style>
+  .banner {
+    position: relative;
+    display: flex;
+    flex: 1;
+    align-items: flex-end;
+    min-height: 40svh;
+    padding: var(--gap);
+  }
+
+  h1 {
+    position: relative;
+    margin: 0;
+    font-size: var(--text-hero);
+    font-weight: var(--weight-heading);
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+</style>

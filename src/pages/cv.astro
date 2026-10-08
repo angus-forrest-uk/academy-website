@@ -4,6 +4,7 @@ import { existsSync } from "node:fs";
 import { join } from "node:path";
 import SectionLayout from "@/layouts/SectionLayout.astro";
 import NoisePortrait from "@/components/NoisePortrait.astro";
+import Button from "@/components/Button.astro";
 import { Content } from "@/content/cv.md";
 
 const hasCv = existsSync(join(process.cwd(), "public", "cv.pdf"));
@@ -14,9 +15,9 @@ const hasCv = existsSync(join(process.cwd(), "public", "cv.pdf"));
   {
     hasCv ? (
       <p>
-        <a class="button" href="/cv.pdf" download>
+        <Button href="/cv.pdf" download>
           Download CV (PDF)
-        </a>
+        </Button>
       </p>
     ) : null
   }

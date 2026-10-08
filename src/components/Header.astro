@@ -5,26 +5,67 @@ const path = pagePath(Astro.url.pathname);
 const current = sectionOf(path)?.href;
 ---
 
-<header class="frame-header">
-  <a class="frame-name" href="/" aria-current={path === "/" ? "page" : undefined}>{siteName}</a>
-  <nav class="frame-nav" aria-label="Sections">
+<header class="label">
+  <a href="/" aria-current={path === "/" ? "page" : undefined}>{siteName}</a>
+  <nav aria-label="Sections">
     {
-      sections.map(({ href, label, parts }) => (
-        <div class="frame-nav-item">
-          <a href={href} aria-current={current === href ? "page" : undefined}>
-            {label}
-          </a>
-          {parts.length > 0 ? (
-            <ul class="frame-submenu">
-              {parts.map((part) => (
-                <li>
-                  <a href={`${href}#${part.id}`}>{part.label}</a>
-                </li>
-              ))}
-            </ul>
-          ) : null}
-        </div>
+      sections.map(({ href, label }) => (
+        <a href={href} aria-current={current === href ? "page" : undefined}>
+          {label}
+        </a>
       ))
     }
   </nav>
 </header>
+
+<style>
+  header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    border-bottom: var(--rule);
+  }
+
+  a {
+    padding: 0.75rem var(--gap);
+    text-decoration: none;
+  }
+
+  a:hover,
+  nav a[aria-current="page"] {
+    color: var(--paper);
+    background: var(--ink);
+  }
+
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  nav a {
+    border-left: var(--rule);
+  }
+
+  /* Narrow screens: the sections drop under the name, in a grid of three. */
+  @media (max-width: 44rem) {
+    nav {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      width: 100%;
+      border-top: var(--rule);
+    }
+
+    nav a {
+      padding-inline: 0.5rem;
+      text-align: center;
+    }
+
+    nav a:nth-child(3n + 1) {
+      border-left: 0;
+    }
+
+    nav a:nth-child(n + 4) {
+      border-top: var(--rule);
+    }
+  }
+</style>

@@ -55,3 +55,12 @@ const icon: { viewBox?: string; body: string } = icons[name];
   {title && <title>{title}</title>}
   <Fragment set:html={icon.body} />
 </svg>
+
+<style>
+  /* Set --icon-size on a parent to make icons inside it smaller or larger. */
+  svg {
+    width: var(--icon-size, 1.125rem);
+    height: var(--icon-size, 1.125rem);
+    fill: currentColor;
+  }
+</style>

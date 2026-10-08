@@ -34,7 +34,7 @@ const grey = `${CONTRAST} 0 0 0 ${offset}`;
 const id = `noise-${index}`;
 ---
 
-<svg class:list={["portrait", className]} aria-hidden="true">
+<svg class={className} aria-hidden="true">
   <filter id={id} x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
     <feTurbulence type="fractalNoise" baseFrequency={frequency} numOctaves="2" seed={index + 1}></feTurbulence>
     <feColorMatrix values={`${grey} ${grey} ${grey} 0 0 0 0 1`}></feColorMatrix>
@@ -47,3 +47,13 @@ const id = `noise-${index}`;
   <rect width="100%" height="100%" filter={`url(#${id})`}></rect>
 </svg>
 
+
+<style>
+  /* Fills whatever box it is put in; that box needs position: relative. */
+  svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+</style>

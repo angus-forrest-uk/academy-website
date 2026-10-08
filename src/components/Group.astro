@@ -1,0 +1,24 @@
+---
+interface Props {
+  label: string;
+  id?: string;
+}
+
+const { label, id } = Astro.props;
+---
+
+<section id={id}>
+  <h2 class="label">{label}</h2>
+  <slot />
+</section>
+
+<style>
+  section {
+    padding: var(--gap);
+    border-top: var(--rule);
+  }
+
+  h2 {
+    margin: 0 0 var(--gap);
+  }
+</style>

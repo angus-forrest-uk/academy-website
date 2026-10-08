@@ -1,35 +1,22 @@
 ---
 import SectionLayout from "@/layouts/SectionLayout.astro";
+import Card from "@/components/Card.astro";
+import Cards from "@/components/Cards.astro";
+import Group from "@/components/Group.astro";
 import NoisePortrait from "@/components/NoisePortrait.astro";
-import Icon from "@/components/Icon.astro";
 import { Content } from "@/content/about.md";
 import { email, profiles } from "@/lib/site";
 ---
 
 <SectionLayout title="About">
   <Content />
-  {/* Swap the noise for a photo of yourself by putting one in public/images
-      and replacing this line with <img src="/images/you.jpg" alt="" class="portrait" />. */}
+  {/* To use a photo instead, put it in public/ and replace this line with
+      <img slot="aside" src="/you.jpg" alt="" style="width:100%;height:100%;object-fit:cover" /> */}
   <NoisePortrait slot="aside" index={60} hues={[140, 325]} frequency={0.003} />
-  <section class="group" id="contact" slot="after">
-    <h2 class="group-label">Contact</h2>
-    <ul class="people">
-      <li class="chip">
-        <span class="chip-name">Email</span>
-        <span class="chip-detail"><a href={`mailto:${email}`}>{email}</a></span>
-      </li>
-      {
-        profiles.map(({ label, href, icon }) => (
-          <li class="chip">
-            <span class="chip-name">{label}</span>
-            <span class="chip-links">
-              <a href={href} rel="noopener me">
-                <Icon name={icon} title={`Me on ${label}`} />
-              </a>
-            </span>
-          </li>
-        ))
-      }
-    </ul>
-  </section>
+  <Group label="Contact" id="contact" slot="after">
+    <Cards layout="grid">
+      <Card kind="Email" title={email} href={`mailto:${email}`} />
+      {profiles.map(({ label, href }) => <Card kind="Profile" title={label} href={href} />)}
+    </Cards>
+  </Group>
 </SectionLayout>

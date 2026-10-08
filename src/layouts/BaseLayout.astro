@@ -1,16 +1,10 @@
 ---
-import "@/styles/base.css";
-import "@/styles/frame.css";
-import "@/styles/prose.css";
-import "@/styles/motion.css";
+import "@/styles/global.css";
 import Head from "@/components/Head.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
-import { pagePath } from "@/lib/site";
 
 type Props = import("astro/types").ComponentProps<typeof Head>;
-
-const path = pagePath(Astro.url.pathname);
 ---
 
 <!doctype html>
@@ -19,12 +13,29 @@ const path = pagePath(Astro.url.pathname);
     <Head {...Astro.props} />
   </head>
   <body>
-    <div class:list={["frame", { "frame-home": path === "/" }]}>
+    <div class="frame">
       <Header />
-      <main class="frame-main" transition:animate="fade">
+      <main transition:animate="fade">
         <slot />
       </main>
       <Footer />
     </div>
   </body>
 </html>
+
+<style>
+  .frame {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    grid-template-columns: minmax(0, 1fr);
+    max-width: var(--width-frame);
+    min-height: calc(100svh - 2 * var(--inset));
+    margin-inline: auto;
+    border: var(--rule);
+  }
+
+  main {
+    display: flex;
+    flex-direction: column;
+  }
+</style>
