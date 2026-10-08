@@ -1,0 +1,30 @@
+---
+import "@/styles/base.css";
+import "@/styles/frame.css";
+import "@/styles/prose.css";
+import "@/styles/motion.css";
+import Head from "@/components/Head.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import { pagePath } from "@/lib/site";
+
+type Props = import("astro/types").ComponentProps<typeof Head>;
+
+const path = pagePath(Astro.url.pathname);
+---
+
+<!doctype html>
+<html lang="en" transition:animate="none">
+  <head>
+    <Head {...Astro.props} />
+  </head>
+  <body>
+    <div class:list={["frame", { "frame-home": path === "/" }]}>
+      <Header />
+      <main class="frame-main" transition:animate="fade">
+        <slot />
+      </main>
+      <Footer />
+    </div>
+  </body>
+</html>

@@ -1,0 +1,41 @@
+
+---
+import "katex/dist/katex.min.css";
+import { render } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { isHidden, isoDate, longDate, type Post } from "@/lib/posts";
+import { siteName } from "@/lib/site";
+
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+const { title, description, pubDate, recentDate, author } = post.data;
+const { Content } = await render(post);
+const hidden = isHidden(post);
+const updated = recentDate && isoDate(recentDate) !== isoDate(pubDate) ? recentDate : undefined;
+---
+
+<BaseLayout title={`${title} | ${siteName}`} description={description} published={pubDate} noindex={hidden}>
+  <article class="page post">
+    <p class="post-meta">
+      <a href="/posts">Posts</a>
+      <span aria-hidden="true">/</span>
+      <time datetime={isoDate(pubDate)}>{longDate(pubDate)}</time>
+      {
+        updated ? (
+          <span>
+            · Updated <time datetime={isoDate(updated)}>{longDate(updated)}</time>
+          </span>
+        ) : null
+      }
+      {hidden ? <span class="post-flag">Draft: not on the built site</span> : null}
+    </p>
+    <h1 class="page-title">{title}</h1>
+    <p class="post-byline">{author}</p>
+    <div class="page-body prose">
+      <Content />
+    </div>
+  </article>
+</BaseLayout>

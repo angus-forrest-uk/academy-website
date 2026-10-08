@@ -1,0 +1,49 @@
+---
+interface Props {
+  index: number;
+  hues?: [number, number];
+  frequency?: number;
+  class?: string;
+}
+
+const { index, hues, frequency = 0.0066, class: className } = Astro.props;
+
+const GOLDEN = 0.618033988749895;
+const SATURATION = 0.75;
+const LIGHTNESS = 0.55;
+const CONTRAST = 5;
+
+const hue = ((index * GOLDEN) % 1) * 180;
+const [fromHue, toHue] = hues ?? [hue, hue + 180];
+
+function rgb(h: number): [number, number, number] {
+  const a = SATURATION * Math.min(LIGHTNESS, 1 - LIGHTNESS);
+  const channel = (n: number) => {
+    const k = (n + h / 30) % 12;
+    return LIGHTNESS - a * Math.max(-1, Math.min(k - 3, 9 - k, 1));
+  };
+  return [channel(0), channel(8), channel(4)];
+}
+
+const from = rgb(fromHue);
+const to = rgb(toHue);
+const table = (i: number) => `${from[i].toFixed(3)} ${to[i].toFixed(3)}`;
+
+const offset = (0.5 - 0.5 * CONTRAST).toFixed(2);
+const grey = `${CONTRAST} 0 0 0 ${offset}`;
+const id = `noise-${index}`;
+---
+
+<svg class:list={["portrait", className]} aria-hidden="true">
+  <filter id={id} x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency={frequency} numOctaves="2" seed={index + 1}></feTurbulence>
+    <feColorMatrix values={`${grey} ${grey} ${grey} 0 0 0 0 1`}></feColorMatrix>
+    <feComponentTransfer>
+      <feFuncR type="table" tableValues={table(0)}></feFuncR>
+      <feFuncG type="table" tableValues={table(1)}></feFuncG>
+      <feFuncB type="table" tableValues={table(2)}></feFuncB>
+    </feComponentTransfer>
+  </filter>
+  <rect width="100%" height="100%" filter={`url(#${id})`}></rect>
+</svg>
+

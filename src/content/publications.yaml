@@ -1,0 +1,65 @@
+
+
+- bibcode: 2026ApJ...998..187F
+  date: '2026-02-09'
+  kind: article
+  title: >-
+    Semianalytic Orbits: A Practical Implementation of Lynden-Bell’s Planar Orbits and Extension
+    to Vertical Oscillations
+  venue: The Astrophysical Journal
+  volume: '998'
+  issue: '1'
+  page: '187'
+  doi: 10.3847/1538-4357/ae1a43
+  authors:
+    - {given: John C., family: Forbes, orcid: https://orcid.org/0000-0002-1975-4449}
+    - {given: Michele T., family: Bannister, orcid: https://orcid.org/0000-0003-3257-4490}
+    - {given: Angus, family: Forrest, orcid: https://orcid.org/0009-0008-0355-5809}
+    - {given: Ian, family: DSouza, orcid: https://orcid.org/0009-0004-3142-3898}
+    - {given: Jack, family: Patterson, orcid: https://orcid.org/0009-0001-1692-4676}
+  abstract: >-
+    We present a practical implementation of the perturbation theory derived by Lynden-Bell for
+    describing, to arbitrary precision, the orbit of a particle in an arbitrary spherically
+    symmetric potential. Our implementation corrects minor but important errors in the initial
+    derivation, and extends the formalism in two ways. First, a numerical method is developed to
+    efficiently and precisely solve the analogue to the Kepler problem, and second, a method is
+    introduced to track the particle’s vertical oscillations about an axisymmetric disk, even
+    when the vertical oscillation frequency varies with radius. While not as flexible as
+    numerical integration, this method guarantees conservation of energy, angular momentum, and
+    related quantities, and it may be used to evaluate a particle’s position and velocity in
+    constant time. Our implementation is written in Python and is pip installable as the package
+    <code>lbparticles</code>.
+
+- bibcode: 2025ApJ...988..121F
+  date: '2025-07-17'
+  kind: article
+  title: 'He Awa Whiria: The Tidal Streams of Interstellar Objects'
+  venue: The Astrophysical Journal
+  volume: '988'
+  issue: '1'
+  page: '121'
+  doi: 10.3847/1538-4357/adc9ac
+  authors:
+    - {given: John C., family: Forbes, orcid: https://orcid.org/0000-0002-1975-4449}
+    - {given: Michele T., family: Bannister, orcid: https://orcid.org/0000-0003-3257-4490}
+    - {given: Chris, family: Lintott, orcid: https://orcid.org/0000-0001-5578-359X}
+    - {given: Angus, family: Forrest, orcid: https://orcid.org/0009-0008-0355-5809}
+    - {given: Simon, family: Portegies Zwart, orcid: https://orcid.org/0000-0001-5839-0302}
+    - {given: Rosemary C., family: Dorsey, orcid: https://orcid.org/0000-0002-8910-1021}
+    - {given: Leah, family: Albrow, orcid: https://orcid.org/0009-0003-4251-2821}
+    - {given: Matthew J., family: Hopkins, orcid: https://orcid.org/0000-0001-6314-873X}
+  abstract: >-
+    Upcoming surveys are likely to discover a new sample of interstellar objects (ISOs) within
+    the solar system, but questions remain about the origin and distribution of this population
+    within the Galaxy. ISOs are ejected from their host systems with a range of velocities,
+    spreading out into tidal streams—analogous to the stellar streams routinely observed from
+    the disruption of star clusters and dwarf galaxies. We create a simulation of ISO streams
+    orbiting in the Galaxy, deriving a simple model for their density distribution over time. We
+    then construct a population model to predict the properties of the streams in which the Sun
+    is currently embedded. We find that the number of streams encountered by the Sun is quite
+    large, ∼10<sup>6</sup> or more. However, the wide range of stream properties means that for
+    reasonable future samples of ISOs observed in the solar system, we may see ISOs from the
+    same star (“siblings”), and we are likely to see ISOs from the same star cluster
+    (“cousins”). We also find that ISOs are typically not traceable to their parent star, though
+    this may be possible for ISO siblings. Any ISOs observed with a common origin will come from
+    younger, dynamically colder streams.

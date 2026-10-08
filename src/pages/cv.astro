@@ -1,0 +1,24 @@
+
+---
+import { existsSync } from "node:fs";
+import { join } from "node:path";
+import SectionLayout from "@/layouts/SectionLayout.astro";
+import NoisePortrait from "@/components/NoisePortrait.astro";
+import { Content } from "@/content/cv.md";
+
+const hasCv = existsSync(join(process.cwd(), "public", "cv.pdf"));
+---
+
+<SectionLayout title="CV">
+  <Content />
+  {
+    hasCv ? (
+      <p>
+        <a class="button" href="/cv.pdf" download>
+          Download CV (PDF)
+        </a>
+      </p>
+    ) : null
+  }
+  <NoisePortrait slot="aside" index={80} hues={[185, 25]} frequency={0.003} />
+</SectionLayout>

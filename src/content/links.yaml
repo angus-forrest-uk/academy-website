@@ -1,0 +1,17 @@
+- group: Talks
+  links:
+    - title: An example talk, recorded
+      url: https://www.youtube.com/
+      kind: Talk
+      note: Where and when it was given, in a line.
+
+- group: Code and data
+  links:
+    - title: This website's template
+      url: https://github.com/angus-forrest-uk/academy-website
+      kind: Code
+      note: Astro, markdown and a GitHub Pages workflow.
+    - title: academy-resume
+      url: https://github.com/angus-forrest-uk/academy-resume
+      kind: Code
+      note: A CV template written in Typst.

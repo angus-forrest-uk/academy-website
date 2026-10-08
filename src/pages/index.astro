@@ -1,59 +1,78 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import Header from '../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import NoisePortrait from "@/components/NoisePortrait.astro";
+import { sections, siteName } from "@/lib/site";
+import { isoDate, longDate, publishedPosts } from "@/lib/posts";
+import { dayMonthAndYear } from "@/lib/dates";
+import { publications } from "@/lib/publications";
+
+interface Preview {
+  kind: string;
+  when: string;
+  datetime: string;
+  title: string;
+  source?: string;
+  href: string;
+}
+
+const previews: Record<string, Preview[]> = {
+  "/posts": (await publishedPosts()).slice(0, 3).map((post) => ({
+    kind: "Post",
+    when: longDate(post.data.pubDate),
+    datetime: isoDate(post.data.pubDate),
+    title: post.data.title,
+    href: `/posts/${post.id}`,
+  })),
+  "/research": publications.slice(0, 3).map((publication) => ({
+    kind: "Publication",
+    when: dayMonthAndYear(publication.date),
+    datetime: publication.date,
+    title: publication.title,
+    source: publication.venue,
+    href: `/research#${publication.bibcode}`,
+  })),
+};
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This
-				template serves as a lightweight, minimally-styled starting point for anyone looking to
-				build a personal website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your{' '}
-				<code>astro.config.mjs</code> file. You can customize your setup with{' '}
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like
-				Tailwind, React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>
-					Edit this page in <code>src/pages/index.astro</code>
-				</li>
-				<li>
-					Edit the site header items in <code>src/components/Header.astro</code>
-				</li>
-				<li>
-					Add your name to the footer in <code>src/components/Footer.astro</code>
-				</li>
-				<li>
-					Check out the included blog posts in <code>src/content/blog/</code>
-				</li>
-				<li>
-					Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code>
-				</li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to{' '}
-				<a href="https://docs.astro.build/">read the docs</a> or{' '}
-				<a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out{' '}
-				<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a> by{' '}
-				<a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
-		</main>
-		<Footer />
-	</body>
-</html>
+<BaseLayout title={siteName}>
+  <section class="banner">
+    <NoisePortrait index={40} hues={[225, 355]} frequency={0.003} />
+    <h1 class="banner-title">{siteName}</h1>
+  </section>
+  {
+    sections.map(({ href, label, summary }, index) => (
+      <section class:list={["page-split", "page-band", { "page-split-flipped": index % 2 === 1 }]}>
+        <div class="page">
+          <div class="page-body">
+            <h2>
+              <a href={href}>{label}</a>
+            </h2>
+            <p>{summary}</p>
+            <a class="button" href={href} aria-label={`Go to ${label}`}>
+              Learn more
+            </a>
+          </div>
+        </div>
+        {previews[href]?.length ? (
+          <ul class="page-aside updates">
+            {previews[href].map(({ kind, when, datetime, title, source, href: where }) => (
+              <li>
+                <a class="chip update" href={where}>
+                  <span class="paper-reference">
+                    {kind} · <time datetime={datetime}>{when}</time>
+                  </span>
+                  <span class="paper-title">{title}</span>
+                  {source ? <span class="update-source">{source}</span> : null}
+                </a>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <a class="page-aside" href={href} aria-label={label} tabindex="-1">
+            <NoisePortrait index={120 + index} frequency={0.003} />
+          </a>
+        )}
+      </section>
+    ))
+  }
+</BaseLayout>

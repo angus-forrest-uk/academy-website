@@ -1,0 +1,34 @@
+---
+import { ClientRouter } from "astro:transitions";
+import { pagePath, siteDescription, siteName } from "@/lib/site";
+
+interface Props {
+  title: string;
+  description?: string;
+  published?: Date;
+  noindex?: boolean;
+}
+
+const { title, description = siteDescription, published, noindex = false } = Astro.props;
+const pageUrl = new URL(pagePath(Astro.url.pathname), Astro.site);
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="light dark" />
+<link rel="preload" as="font" type="font/woff2" href="/fonts/Geist-variable.woff2" crossorigin />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="alternate" type="application/rss+xml" title={`${siteName}: posts`} href="/feed.xml" />
+<link rel="sitemap" href="/sitemap-index.xml" />
+<title>{title}</title>
+<meta name="description" content={description} />
+<meta name="author" content={siteName} />
+<link rel="canonical" href={pageUrl} />
+{noindex ? <meta name="robots" content="noindex" /> : null}
+<meta property="og:type" content={published ? "article" : "website"} />
+{published ? <meta property="article:published_time" content={published.toISOString()} /> : null}
+<meta property="og:site_name" content={siteName} />
+<meta property="og:title" content={title} />
+<meta property="og:url" content={pageUrl} />
+<meta property="og:description" content={description} />
+<ClientRouter />

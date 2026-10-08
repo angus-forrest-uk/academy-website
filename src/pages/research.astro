@@ -1,0 +1,119 @@
+
+---
+import SectionLayout from "@/layouts/SectionLayout.astro";
+import Icon from "@/components/Icon.astro";
+import NoisePortrait from "@/components/NoisePortrait.astro";
+import { Content as Intro } from "@/content/research.md";
+import { bibtex } from "@/lib/bibtex";
+import { doiUrl, publications, reference, scixUrl } from "@/lib/publications";
+---
+
+<SectionLayout title="Research">
+  <Intro />
+  <section class="group" id="publications" slot="after">
+    <h2 class="group-label">Publications</h2>
+    <ul class="papers">
+      {
+        publications.map((publication, index) => (
+          <li class="chip paper" id={publication.bibcode}>
+            <div class="paper-text">
+              <p class="paper-reference">{reference(publication)}</p>
+              <h3 class="paper-title">{publication.title}</h3>
+              <ul class="paper-authors">
+                {publication.authors.map(({ given, family, orcid }) => (
+                  <li>
+                    {given} {family}
+                    {orcid ? (
+                      <a href={orcid} rel="noopener">
+                        <Icon name="orcid" title={`${given} ${family} on ORCID`} />
+                      </a>
+                    ) : null}
+                  </li>
+                ))}
+              </ul>
+              <div class="paper-abstract">
+                <p id={`abstract-${publication.bibcode}`} set:html={publication.abstract} />
+                <button class="paper-toggle" type="button" aria-expanded="false" aria-controls={`abstract-${publication.bibcode}`}>
+                  More
+                </button>
+              </div>
+              <p class="chip-links">
+                <a href={scixUrl(publication)} rel="noopener">
+                  <Icon name="scix" title={`${publication.title} on SciX`} />
+                </a>
+                <a href={doiUrl(publication)} rel="noopener">
+                  <Icon name="link" title={`${publication.title} at its publisher`} />
+                </a>
+                <a
+                  class="paper-export"
+                  href={`/publications/${publication.bibcode}.bib`}
+                  download
+                  data-bibtex={bibtex(publication)}
+                >
+                  <Icon name="share" title={`Copy BibTeX citation for ${publication.title}`} />
+                </a>
+                <span class="paper-status" role="status"></span>
+              </p>
+            </div>
+            {/* Stands in for a figure from the paper. */}
+            <div class="paper-image">
+              <NoisePortrait index={index + 20} />
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</SectionLayout>
+
+<script>
+  document.addEventListener("click", (event) => {
+    if (!(event.target instanceof Element)) return;
+
+    const toggle = event.target.closest(".paper-toggle");
+    if (toggle) {
+      const open = toggle.getAttribute("aria-expanded") !== "true";
+      toggle.setAttribute("aria-expanded", String(open));
+      toggle.textContent = open ? "Less" : "More";
+      return;
+    }
+
+    const link = event.target.closest<HTMLAnchorElement>(".paper-export");
+    const citation = link?.dataset.bibtex;
+    if (!link || !citation) return;
+
+    event.preventDefault();
+    const status = link.parentElement?.querySelector(".paper-status");
+    copy(citation).then((copied) => {
+      if (!status) return;
+      status.textContent = copied ? "BibTeX copied to clipboard" : "Could not copy";
+      setTimeout(() => (status.textContent = ""), 2500);
+    });
+  });
+
+  function copyFromTextBox(text: string): boolean {
+    const box = document.createElement("textarea");
+    box.value = text;
+    box.readOnly = true;
+    box.style.position = "fixed";
+    box.style.opacity = "0";
+    document.body.append(box);
+    box.select();
+    let copied = false;
+    try {
+      copied = document.execCommand("copy");
+    } catch {
+      copied = false;
+    }
+    box.remove();
+    return copied;
+  }
+
+  function copy(text: string): Promise<boolean> {
+    if (!navigator.clipboard) return Promise.resolve(copyFromTextBox(text));
+    return navigator.clipboard.writeText(text).then(
+      () => true,
+      () => copyFromTextBox(text),
+    );
+  }
+</script>
