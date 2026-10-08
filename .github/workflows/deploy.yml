@@ -1,0 +1,63 @@
+name: Deploy
+
+# Checks and builds the site on every push and pull request. In a repository
+# named USERNAME.github.io it also publishes the site with GitHub Pages, after
+# Settings -> Pages -> Source has been set to "GitHub Actions". Anywhere else,
+# such as the template repository itself, it only checks that the site builds.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# One run per branch at a time; a newer push replaces a check still running,
+# but never interrupts a deployment halfway through.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: oven-sh/setup-bun@v2
+
+      # Astro needs Node 22.12 or later.
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Type-check
+        run: bun run check
+
+      - name: Build
+        run: bun run build
+
+      - name: Upload site
+        if: endsWith(github.repository, '.github.io') && github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    if: endsWith(github.repository, '.github.io') && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
