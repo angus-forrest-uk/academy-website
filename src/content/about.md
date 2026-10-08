@@ -32,9 +32,10 @@ Say what your research is about in plain words, then link to the
 ## Contact
 
 Set the boundaries of contact with people of all different walks of life. I feel that
-Tom scott in particular has a very good website if you want a reference of how to word
-and deal with solicitation. I would recommend keeping your contact details on a publicly
-available website separate to more important communication channels, unless you are
-willing to sign up for the task of sorting through all the unnecessary spam you will
-collect. Possibly a good purpose for one shot classifies in the near future!
+Tom Scott in particular has an [excellent website](https://www.tomscott.com/contact/)
+if you want a reference of how to word and deal with solicitation. I would recommend
+keeping your contact details on a publicly available website separate to more important
+communication channels, unless you are willing to sign up for the task of sorting
+through all the unnecessary spam you will collect. Possibly a good purpose for one
+shot classifies in the near future!
 
