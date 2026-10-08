@@ -11,4 +11,4 @@ papers behind it, and the methods I find useful along the way.
 
 Posts can carry typeset maths, such as Kepler's third law,
 $T^2 \propto a^3$, as well as figures, tables and code. Have a look at
-`src/content/posts/template.md` in the repository for an example of each.
+`src/content/posts/template/index.md` in the repository for an example of each.

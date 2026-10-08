@@ -7,9 +7,10 @@ description: "Halloween 2026, Spooky fun!"
 draft: true
 ---
 
-Copy this file to start a new post, rename it, and change the frontmatter
-above. The filename becomes the post's address: `my-first-post.md` is served
-at `/posts/my-first-post`.
+Copy this folder to start a new post, rename it, and change the frontmatter
+above. The folder's name becomes the post's address: `my-first-post/index.md`
+is served at `/posts/my-first-post`. A post with no images can also be a
+single file, `my-first-post.md`, with the same address.
 
 `draft: true` keeps a post off the built site. `bun run dev` still shows it,
 marked as a draft, so you can read it as you write. Set `draft: false` when it
@@ -25,10 +26,11 @@ and `**bold**` for emphasis, and `[a link](https://example.com)` for a link.
 
 ## Images
 
-Put the image in `public/images/` and refer to it by its name alone. The alt
-text in the brackets is shown as its caption.
+Put the image in the post's folder, next to `index.md`, and refer to it with
+`./` in front of its name. The site resizes and compresses it for you, and
+the alt text in the brackets is shown as its caption.
 
-![A diagram of a planet's elliptical orbit around its star](orbit.svg)
+![A diagram of a planet's elliptical orbit around its star](./orbit.svg)
 
 ## Maths
 
