@@ -17,84 +17,31 @@ const external = href?.startsWith("http");
 const hasImage = Astro.slots.has("image");
 ---
 
-<li id={id} class:list={{ "with-image": hasImage }}>
-  <Tag class:list={["body", { link: href }]} href={href} rel={external ? "noopener" : undefined}>
+<li
+  id={id}
+  class:list={[
+    "flex border border-ink scroll-mt-(--gap) [&:target]:outline-3 [&:target]:outline-ink [&:target]:outline-offset-3",
+    { "max-[44rem]:flex-col-reverse": hasImage },
+  ]}
+>
+  <Tag
+    class:list={[
+      "flex flex-1 flex-col justify-center gap-3 min-w-0 p-(--gap) [&>*]:max-w-(--measure-wide)",
+      { "hover:text-paper hover:bg-ink": href },
+    ]}
+    href={href}
+    rel={external ? "noopener" : undefined}
+  >
     {kind ? <p class="label">{kind}</p> : null}
-    <h3>{title}</h3>
-    {text ? <p class="text">{text}</p> : null}
+    <h3 class="text-md font-heading leading-[1.2] text-balance">{title}</h3>
+    {text ? <p class="text-sm">{text}</p> : null}
     <slot />
   </Tag>
   {
     hasImage ? (
-      <div class="image">
+      <div class="relative w-(--width-card) border-l border-ink max-[44rem]:w-full max-[44rem]:aspect-2/1 max-[44rem]:border-l-0 max-[44rem]:border-b border-ink">
         <slot name="image" />
       </div>
     ) : null
   }
 </li>
-
-<style>
-  li {
-    display: flex;
-    border: var(--rule);
-    scroll-margin-top: var(--gap);
-  }
-
-  li:target {
-    outline: 3px solid var(--ink);
-    outline-offset: 3px;
-  }
-
-  .body {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    justify-content: center;
-    gap: 0.75rem;
-    min-width: 0;
-    padding: var(--gap);
-    text-decoration: none;
-  }
-
-  .body > :global(*) {
-    max-width: var(--measure-wide);
-    margin: 0;
-  }
-
-  .link:hover {
-    color: var(--paper);
-    background: var(--ink);
-  }
-
-  h3 {
-    font-size: var(--text-md);
-    font-weight: var(--weight-heading);
-    line-height: 1.2;
-    text-wrap: balance;
-  }
-
-  .text {
-    font-size: var(--text-sm);
-  }
-
-  /* A picture down the right-hand side, as tall as the text beside it. */
-  .image {
-    position: relative;
-    flex: none;
-    width: var(--width-card);
-    border-left: var(--rule);
-  }
-
-  @media (max-width: 44rem) {
-    .with-image {
-      flex-direction: column-reverse;
-    }
-
-    .image {
-      width: 100%;
-      aspect-ratio: 2;
-      border-bottom: var(--rule);
-      border-left: 0;
-    }
-  }
-</style>

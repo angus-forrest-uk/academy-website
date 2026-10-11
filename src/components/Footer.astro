@@ -2,24 +2,7 @@
 import { siteName } from "@/lib/site";
 ---
 
-<footer class="label">
+<footer class="label flex justify-between py-3 px-(--gap) border-t border-ink">
   <span>{siteName} · {new Date().getFullYear()}</span>
-  <a href="/feed.xml">RSS</a>
+  <a href="/feed.xml" class="hover:underline">RSS</a>
 </footer>
-
-<style>
-  footer {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.75rem var(--gap);
-    border-top: var(--rule);
-  }
-
-  a {
-    text-decoration: none;
-  }
-
-  a:hover {
-    text-decoration: underline;
-  }
-</style>

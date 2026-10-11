@@ -13,29 +13,14 @@ type Props = import("astro/types").ComponentProps<typeof Head>;
     <Head {...Astro.props} />
   </head>
   <body>
-    <div class="frame">
+    <div
+      class="grid grid-cols-[minmax(0,1fr)] grid-rows-[auto_1fr_auto] max-w-frame min-h-[calc(100svh-2*var(--inset))] mx-auto border border-ink"
+    >
       <Header />
-      <main transition:animate="fade">
+      <main class="flex flex-col" transition:animate="fade">
         <slot />
       </main>
       <Footer />
     </div>
   </body>
 </html>
-
-<style>
-  .frame {
-    display: grid;
-    grid-template-rows: auto 1fr auto;
-    grid-template-columns: minmax(0, 1fr);
-    max-width: var(--width-frame);
-    min-height: calc(100svh - 2 * var(--inset));
-    margin-inline: auto;
-    border: var(--rule);
-  }
-
-  main {
-    display: flex;
-    flex-direction: column;
-  }
-</style>

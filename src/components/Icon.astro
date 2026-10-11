@@ -47,7 +47,7 @@ const icon: { viewBox?: string; body: string } = icons[name];
 <svg
   xmlns="http://www.w3.org/2000/svg"
   viewBox={icon.viewBox ?? "0 0 24 24"}
-  class:list={["icon", className]}
+  class:list={["size-[var(--icon-size,1.125rem)] fill-current", className]}
   role={title ? "img" : undefined}
   aria-hidden={title ? undefined : "true"}
   {...rest}
@@ -56,11 +56,3 @@ const icon: { viewBox?: string; body: string } = icons[name];
   <Fragment set:html={icon.body} />
 </svg>
 
-<style>
-  /* Set --icon-size on a parent to make icons inside it smaller or larger. */
-  svg {
-    width: var(--icon-size, 1.125rem);
-    height: var(--icon-size, 1.125rem);
-    fill: currentColor;
-  }
-</style>

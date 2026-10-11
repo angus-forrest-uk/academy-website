@@ -34,9 +34,9 @@ const previews: Record<string, Preview[]> = {
 ---
 
 <BaseLayout title={siteName}>
-  <section class="banner">
+  <section class="relative flex flex-1 items-end min-h-[40svh] p-(--gap)">
     <NoisePortrait index={40} hues={[225, 355]} frequency={0.003} />
-    <h1>{siteName}</h1>
+    <h1 class="relative text-hero font-heading leading-none tracking-[-0.03em]">{siteName}</h1>
   </section>
   {
     sections.map(({ href, label, summary }, index) => {
@@ -61,22 +61,3 @@ const previews: Record<string, Preview[]> = {
   }
 </BaseLayout>
 
-<style>
-  .banner {
-    position: relative;
-    display: flex;
-    flex: 1;
-    align-items: flex-end;
-    min-height: 40svh;
-    padding: var(--gap);
-  }
-
-  h1 {
-    position: relative;
-    margin: 0;
-    font-size: var(--text-hero);
-    font-weight: var(--weight-heading);
-    line-height: 1;
-    letter-spacing: -0.03em;
-  }
-</style>

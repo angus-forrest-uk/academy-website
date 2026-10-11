@@ -1,8 +1,45 @@
 /*
- * The look of the whole site. Change a colour, font or size here and every
- * page follows. Each component keeps its own layout in a <style> block at the
- * bottom of its .astro file.
+ * The look of the whole site. Tailwind v4 is CSS-first: the @theme block
+ * turns the design tokens into utilities (text-ink, bg-paper, border-ink,
+ * font-mono, text-md, max-w-frame, ...). The tokens live in :root as plain
+ * custom properties, so the dark-scheme flip below keeps working for every
+ * utility that points at them.
  */
+
+@import "tailwindcss";
+
+@theme {
+  --color-ink: var(--ink);
+  --color-paper: var(--paper);
+  --color-muted: var(--muted);
+  --color-wash: var(--wash);
+
+  --font-body: "Geist", system-ui, sans-serif;
+  --font-mono: "GeistMono", ui-monospace, monospace;
+
+  --font-weight-medium: 500;
+  --font-weight-heading: 650;
+
+  --text-xs: 0.79rem;
+  --text-sm: 0.889rem;
+  --text-md: 1.125rem;
+  --text-h1: clamp(2rem, 5.5vw, 4rem);
+  --text-hero: clamp(2.5rem, 9vw, 7rem);
+
+  --container-frame: 80rem;
+  --container-card: 17rem;
+  --container-measure: 38rem;
+  --container-measure-wide: 52rem;
+}
+
+/* Small capitals in mono: the voice of labels, dates and navigation. */
+@utility label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
 
 @font-face {
   font-family: "Geist";
@@ -25,19 +62,6 @@
   --muted: #555;
   --wash: #f2f2f2;
 
-  /* Fonts */
-  --font-body: "Geist", system-ui, sans-serif;
-  --font-mono: "GeistMono", ui-monospace, monospace;
-  --weight-medium: 500;
-  --weight-heading: 650;
-
-  /* Text sizes */
-  --text-xs: 0.79rem;
-  --text-sm: 0.889rem;
-  --text-md: 1.125rem;
-  --text-h1: clamp(2rem, 5.5vw, 4rem);
-  --text-hero: clamp(2.5rem, 9vw, 7rem);
-
   /* Lines and spacing */
   --rule: 1px solid var(--ink);
   --gap: clamp(1rem, 2.5vw, 1.5rem);
@@ -59,65 +83,38 @@
   }
 }
 
-* {
-  box-sizing: border-box;
-}
+@layer base {
+  body {
+    padding: var(--inset);
+    min-width: 320px;
+    color: var(--ink);
+    background: var(--paper);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
 
-html {
-  background: var(--paper);
-}
+  a {
+    text-underline-offset: 0.18rem;
+  }
 
-body {
-  margin: 0;
-  padding: var(--inset);
-  min-width: 320px;
-  color: var(--ink);
-  background: var(--paper);
-  font-family: var(--font-body);
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-}
+  :focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 2px;
+  }
 
-a {
-  color: inherit;
-  text-underline-offset: 0.18rem;
-}
+  ::selection {
+    color: var(--paper);
+    background: var(--ink);
+  }
 
-img {
-  max-width: 100%;
-  height: auto;
-}
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 120ms;
+  }
 
-code {
-  font-family: var(--font-mono);
-}
-
-:focus-visible {
-  outline: 2px solid var(--ink);
-  outline-offset: 2px;
-}
-
-::selection {
-  color: var(--paper);
-  background: var(--ink);
-}
-
-/* Small capitals in mono: the voice of labels, dates and navigation. */
-.label {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  font-weight: var(--weight-medium);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-::view-transition-old(*),
-::view-transition-new(*) {
-  animation-duration: 120ms;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  html {
-    scroll-behavior: smooth;
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
   }
 }

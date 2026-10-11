@@ -3,69 +3,20 @@ import { pagePath, sectionOf, sections, siteName } from "@/lib/site";
 
 const path = pagePath(Astro.url.pathname);
 const current = sectionOf(path)?.href;
+
+const link =
+  "py-3 px-(--gap) hover:text-paper hover:bg-ink [&[aria-current=page]]:text-paper [&[aria-current=page]]:bg-ink max-[44rem]:px-2 max-[44rem]:text-center";
 ---
 
-<header class="label">
-  <a href="/" aria-current={path === "/" ? "page" : undefined}>{siteName}</a>
-  <nav aria-label="Sections">
+<header class="label flex flex-wrap justify-between border-b border-ink">
+  <a href="/" class={link} aria-current={path === "/" ? "page" : undefined}>{siteName}</a>
+  <nav class="flex flex-wrap max-[44rem]:grid max-[44rem]:grid-cols-3 max-[44rem]:w-full max-[44rem]:border-t max-[44rem]:border-ink" aria-label="Sections">
     {
       sections.map(({ href, label }) => (
-        <a href={href} aria-current={current === href ? "page" : undefined}>
+        <a href={href} class={`${link} border-l border-ink max-[44rem]:[&:nth-child(3n+1)]:border-l-0 max-[44rem]:[&:nth-child(n+4)]:border-t max-[44rem]:[&:nth-child(n+4)]:border-ink`} aria-current={current === href ? "page" : undefined}>
           {label}
         </a>
       ))
     }
   </nav>
 </header>
-
-<style>
-  header {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    border-bottom: var(--rule);
-  }
-
-  a {
-    padding: 0.75rem var(--gap);
-    text-decoration: none;
-  }
-
-  a:hover,
-  nav a[aria-current="page"] {
-    color: var(--paper);
-    background: var(--ink);
-  }
-
-  nav {
-    display: flex;
-    flex-wrap: wrap;
-  }
-
-  nav a {
-    border-left: var(--rule);
-  }
-
-  /* Narrow screens: the sections drop under the name, in a grid of three. */
-  @media (max-width: 44rem) {
-    nav {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      width: 100%;
-      border-top: var(--rule);
-    }
-
-    nav a {
-      padding-inline: 0.5rem;
-      text-align: center;
-    }
-
-    nav a:nth-child(3n + 1) {
-      border-left: 0;
-    }
-
-    nav a:nth-child(n + 4) {
-      border-top: var(--rule);
-    }
-  }
-</style>

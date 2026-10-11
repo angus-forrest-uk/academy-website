@@ -9,23 +9,10 @@ interface Props {
 const { layout = "rows", fill = false } = Astro.props;
 ---
 
-<ul class:list={[layout, { fill }]}><slot /></ul>
-
-<style>
-  ul {
-    display: grid;
-    gap: var(--gap);
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .fill {
-    height: 100%;
-    grid-auto-rows: 1fr;
-  }
-
-  .grid {
-    grid-template-columns: repeat(auto-fill, minmax(min(var(--width-card), 100%), var(--width-card)));
-  }
-</style>
+<ul
+  class:list={[
+    "grid gap-(--gap)",
+    { "grid-cols-[repeat(auto-fill,minmax(min(var(--width-card),100%),var(--width-card)))]": layout === "grid" },
+    { "h-full auto-rows-fr": fill },
+  ]}
+><slot /></ul>

@@ -1,4 +1,5 @@
 import { defineConfig } from 'astro/config';
+import tailwindcss from '@tailwindcss/vite';
 import { rehypeShiki, unified } from '@astrojs/markdown-remark';
 import sitemap from '@astrojs/sitemap';
 import remarkMath from 'remark-math';
@@ -12,6 +13,7 @@ export default defineConfig({
 	trailingSlash: 'never',
 	build: { format: 'file' },
 	vite: {
+		plugins: [tailwindcss()],
 		build: { cssMinify: 'esbuild' },
 	},
 	integrations: [sitemap()],
